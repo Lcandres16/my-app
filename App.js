@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Platform, Text } from 'react-native'; // Agregué 'Text' desde react-native
+import { StyleSheet, View, Platform, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as MediaLibrary from 'expo-media-library';
@@ -18,11 +18,11 @@ import EmojiSticker from './components/EmojiSticker';
 const PlaceholderImage = require('./assets/images/background-image.png');
 
 const colors = {
-  primary: '#f0f0f0', // Cambié el color a un tono más suave de blanco con gris
+  primary: '#f0f0f0',
   secondary: '#00adef',
   accent: '#ff0066',
   white: '#ffffff',
-  gray: '#808080', // Nuevo color gris
+  gray: '#808080',
 };
 
 const styles = StyleSheet.create({
@@ -44,9 +44,9 @@ const styles = StyleSheet.create({
     bottom: 80,
   },
   optionsRow: {
-    alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
   button: {
     borderRadius: 10,
@@ -56,8 +56,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: 'bold', // Añadí negrita al texto del botón
-    color: colors.white, // Color del texto en blanco
+    fontWeight: 'bold',
+    color: colors.white,
+  },
+  blackText: {
+    color: 'black',
   },
   icon: {
     fontSize: 24,
@@ -75,20 +78,24 @@ export default function App() {
   const [pickedEmoji, setPickedEmoji] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const [status, requestPermission] = MediaLibrary.usePermissions();
   const imageRef = useRef();
 
-  if (status === null) {
-    requestPermission();
-  }
+  useEffect(() => {
+    (async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Permission to access media library is required!');
+      }
+    })();
+  }, []);
 
   const pickImageAsync = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       quality: 1,
     });
 
-    if (!result.canceled) {
+    if (!result.cancelled) {
       setSelectedImage(result.assets[0].uri);
       setShowAppOptions(true);
     } else {
@@ -109,8 +116,8 @@ export default function App() {
   };
 
   const onSaveImageAsync = async () => {
-    if (Platform.OS !== 'web') {
-      try {
+    try {
+      if (Platform.OS !== 'web') {
         const localUri = await captureRef(imageRef, {
           height: 440,
           quality: 1,
@@ -119,11 +126,7 @@ export default function App() {
         if (localUri) {
           alert('Saved!');
         }
-      } catch (e) {
-        console.log(e);
-      }
-    } else {
-      try {
+      } else {
         const dataUrl = await domtoimage.toJpeg(imageRef.current, {
           quality: 0.95,
           width: 320,
@@ -134,27 +137,19 @@ export default function App() {
         link.download = 'sticker-smash.jpeg';
         link.href = dataUrl;
         link.click();
-      } catch (e) {
-        console.log(e);
       }
+    } catch (e) {
+      console.error(e);
     }
   };
 
   return (
     <GestureHandlerRootView style={styles.container}>
-      <View style={styles.imageContainer}>
-        <View ref={imageRef} collapsable={false}>
-          <ImageViewer
-            ref={imageRef}
-            placeholderImageSource={PlaceholderImage}
-            selectedImage={selectedImage}
-          />
-          {pickedEmoji !== null ? (
-            <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />
-          ) : null}
-        </View>
+      <View style={styles.imageContainer} ref={imageRef}>
+        <ImageViewer placeholderImageSource={PlaceholderImage} selectedImage={selectedImage} />
+        {pickedEmoji !== null && <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />}
       </View>
-      {showAppOptions ? (
+      {showAppOptions && (
         <View style={styles.optionsContainer}>
           <View style={styles.optionsRow}>
             <IconButton icon="refresh" label="Reset" onPress={onReset} />
@@ -162,12 +157,11 @@ export default function App() {
             <IconButton icon="save-alt" label="Save" onPress={onSaveImageAsync} />
           </View>
         </View>
-      ) : (
+      )}
+      {!showAppOptions && (
         <View style={styles.footerContainer}>
           <Button theme="primary" label="Choose a photo" onPress={pickImageAsync} />
-          <Button
-            label="Use this photo" onPress={() => setShowAppOptions(true)}
-          />
+          <Button label="Use this photo" onPress={() => setShowAppOptions(true)} style={styles.blackText} />
         </View>
       )}
       <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
