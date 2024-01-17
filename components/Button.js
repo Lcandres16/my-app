@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   buttonLabel: {
-    color: '#fff',
+    color: '#000000',
     fontSize: 16,
   },
   buttonIcon: {

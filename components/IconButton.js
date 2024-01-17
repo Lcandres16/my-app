@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconButtonLabel: {
-    color: '#fff',
+    color: '#000000',
     marginTop: 12,
   },
 });
