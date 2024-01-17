@@ -2,8 +2,8 @@
 
 Se añadió la importación de Text desde react-native porque en el código original no se estaba utilizando el componente Text, y este componente es necesario para renderizar texto en la interfaz de usuario.e
 ![image](https://github.com/Lcandres16/my-app/assets/116099973/c622a62e-b13c-4eda-9e5b-756efaf1c4c6)
-
-
+.
+#Cambio 2:En cambio, import { StatusBar } from 'expo-status-bar'; importa una herramienta específica de Expo para manejar la barra de estado.
 PREGUNTAS:
 
 ¿Qué problemas tenía la aplicación original?
