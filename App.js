@@ -18,10 +18,11 @@ import EmojiSticker from './components/EmojiSticker';
 const PlaceholderImage = require('./assets/images/background-image.png');
 
 const colors = {
-  primary: '#ff6d00',
+  primary: '#f0f0f0', // Cambié el color a un tono más suave de blanco con gris
   secondary: '#00adef',
   accent: '#ff0066',
-  white: '#ffffff', // Añadí este color para utilizarlo más adelante
+  white: '#ffffff',
+  gray: '#808080', // Nuevo color gris
 };
 
 const styles = StyleSheet.create({
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   icon: {
-    fontSize: 24, // Corregí el nombre de la propiedad de tamaño del icono
+    fontSize: 24,
   },
   emojiSticker: {
     width: 80,
@@ -118,7 +119,7 @@ export default function App() {
           alert('Saved!');
         }
       } catch (e) {
-        console.log(e); // Corregí el paréntesis que faltaba al final de 'console.log'
+        console.log(e);
       }
     } else {
       try {
