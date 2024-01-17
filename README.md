@@ -5,9 +5,10 @@ Se añadió la importación de Text desde react-native porque en el código orig
 
 
 PREGUNTAS:
-¿Qué problemas tenía la aplicación original?
 
+¿Qué problemas tenía la aplicación original?
 Los colores y estilos no eran consistentes y había errores en ciertas partes del código.
+
 ¿Cómo te aseguraste de no estropear nada al hacer cambios?
 
 Antes y después de cambiar cosas, revisé que todo seguía funcionando como debería.
